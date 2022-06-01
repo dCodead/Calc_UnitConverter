@@ -24,10 +24,10 @@ class UnitWidget extends StatefulWidget {
 
 class _UnitWidgetState extends State<UnitWidget> {
   List<DropdownMenuItem<String>> menuItems = [
-    DropdownMenuItem(child: Text("inch"),value: "inch"), // 2.54 cm, 0.0254 m, 1/12 ft, 1 inch
-    DropdownMenuItem(child: Text("feet"),value: "feet"), // 30.48 cm, 0.3048 m, 1 ft, 12 inch
-    DropdownMenuItem(child: Text("cm"),value: "cm"), // 1 cm, 0.01 m, 0.032808399 ft, 0.393701 inch
-    DropdownMenuItem(child: Text("m"),value: "m"), // 100 cm, 1 m, 3.28084 ft, 3.28084*12 inch
+    DropdownMenuItem(child: Text("inch",style: TextStyle(color: Colors.yellow)),value: "inch"), // 2.54 cm, 0.0254 m, 1/12 ft, 1 inch
+    DropdownMenuItem(child: Text("feet",style: TextStyle(color: Colors.yellow)),value: "feet"), // 30.48 cm, 0.3048 m, 1 ft, 12 inch
+    DropdownMenuItem(child: Text("cm",style: TextStyle(color: Colors.yellow)),value: "cm"), // 1 cm, 0.01 m, 0.032808399 ft, 0.393701 inch
+    DropdownMenuItem(child: Text("m",style: TextStyle(color: Colors.yellow)),value: "m"), // 100 cm, 1 m, 3.28084 ft, 3.28084*12 inch
   ];
 
   // List decodingList = [[2.3,3.6],(4.0,3.5)];
@@ -45,6 +45,8 @@ class _UnitWidgetState extends State<UnitWidget> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      
+      backgroundColor: Colors.black54,
       appBar: AppBar(
         title: Text("Unit Converter"),
         centerTitle: true,
@@ -60,6 +62,7 @@ class _UnitWidgetState extends State<UnitWidget> {
 
         DropdownButton<String>(
           items: menuItems,
+          dropdownColor: Colors.black26,
           value: selectedValue,
           onChanged: (value) {
             setState(() {
@@ -73,6 +76,7 @@ class _UnitWidgetState extends State<UnitWidget> {
         ),
         DropdownButton<String>(
           items: menuItems,
+          dropdownColor: Colors.black26,
           value: selectedValue2,
           onChanged: (value) {
             setState(() {
@@ -95,7 +99,9 @@ class _UnitWidgetState extends State<UnitWidget> {
                 Container(
                   width: 150,
                   child: TextField(textDirection: TextDirection.ltr,
-                    decoration: const InputDecoration(hintText: "Enter number"),
+                    style: TextStyle(color: Colors.amber),cursorColor: Colors.amber,
+                    decoration: const InputDecoration(filled: true, fillColor: Colors.brown,
+                      hintText: "Enter number"),
                     keyboardType: TextInputType.number,controller: txt,
                     inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,6}'))],onChanged: (value) {
                       setState((){
@@ -115,8 +121,10 @@ class _UnitWidgetState extends State<UnitWidget> {
 
                 Container(
                   width: 150,
-                  child: TextField(textDirection: TextDirection.ltr,decoration:
-                  const InputDecoration(hintText: "Enter number"),
+                  child: TextField(textDirection: TextDirection.ltr,
+                  style: TextStyle(color: Colors.amber),cursorColor: Colors.amber,
+                  decoration: const InputDecoration(filled: true, fillColor: Colors.brown,
+                    hintText: "Enter number"),
                   keyboardType: TextInputType.number, controller: txt2,
                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,6}')),],onChanged: (value) {
                     setState((){
