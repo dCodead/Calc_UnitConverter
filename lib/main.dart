@@ -1,115 +1,248 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MyApp());
+  /*Here on main I need a stateful widget with a
+      fixed tab of 2 choices to click and choose
+      between Calc & Unit Converter to switch
+      between them simultaneously.
+  */
+  runApp(MaterialApp(
+    home: UnitWidget(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+//Unit Converter widget
+class UnitWidget extends StatefulWidget {
+  const UnitWidget({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
+  State<UnitWidget> createState() => _UnitWidgetState();
+}
+
+class _UnitWidgetState extends State<UnitWidget> {
+  List<DropdownMenuItem<String>> menuItems = [
+    DropdownMenuItem(child: Text("Inch"),value: "Inch"),
+    DropdownMenuItem(child: Text("Mile"),value: "Mile"),
+    DropdownMenuItem(child: Text("Feet"),value: "Feet"),
+    DropdownMenuItem(child: Text("cm"),value: "cm"),
+    DropdownMenuItem(child: Text("m"),value: "m"),
+    DropdownMenuItem(child: Text("m2(squared)"),value: "m2(squared)"),
+    DropdownMenuItem(child: Text("m3(cubed)"),value: "m3(cubed"),
+  ];
+  String selectedValue= "Inch";
+  String selectedValue2= "m";
+
+  double num1=0;
+  double num2=0;
+
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text("Unit Converter"),
+        centerTitle: true,
+        backgroundColor: Colors.amber,
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          children: [
+
+            //Drop-down menus for unit-selection
+            Row(
+              children: [
+
+        DropdownButton<String>(
+          items: menuItems,
+          value: selectedValue,
+          onChanged: (value) {
+            setState(() {
+              selectedValue = value!;
+            });
+          },
+        ),
+        DropdownButton<String>(
+          items: menuItems,
+          value: selectedValue2,
+          onChanged: (value) {
+            setState(() {
+              selectedValue2 = value!;
+            });
+          },
+        )
+
+          ], // End of Children list
+        ),
+
+            //TextFields for input
+            Row(
+              children: [
+                Container(
+                  width: 150,
+                  child: TextField(textDirection: TextDirection.ltr,decoration: const InputDecoration(labelText: "Enter number"),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,6}'))],onChanged: (value) {
+                    setState((){
+                      num1 = value as double;
+                    });
+                    },),
+                ),
+                Container(
+                  width: 150,
+                  child: TextField(textDirection: TextDirection.ltr,decoration: const InputDecoration(labelText: "Enter number"),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,6}')),],onChanged: (value) {
+                    setState((){
+                      num2 = value as double;
+                    });
+                  },)),
+              ],
+
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            //Calculate Button
+            ElevatedButton(onPressed: (){},
+              child: Text("Calculate"),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );  }
+}
+
+
+
+
+
+//Calculator widget
+class CalcWidget extends StatelessWidget {
+  const CalcWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+    appBar: AppBar(
+      title: Text("Calculator"),
+      centerTitle: true,
+      backgroundColor: Colors.amber,
+    ),
+    body: Column(
+    children:<Widget>[
+
+    //Clear, (), %, Divide
+    Row(
+    children: <Widget>[
+    FloatingActionButton(onPressed: (){},
+      child: Text('C'),
+      backgroundColor: Colors.deepOrange,
+    ),
+    FloatingActionButton(onPressed: (){},
+      child: Text('( )'),
+      backgroundColor: Colors.cyan,
+    ),
+    FloatingActionButton(onPressed: (){},
+    child: Text('%'),
+    backgroundColor: Colors.blue,
+    ),
+    FloatingActionButton(onPressed: (){},
+    child: Text('÷'),
+    backgroundColor: Colors.purple
+    ),
+    ],
+
+    ),
+    //7, 8, 9, Multiply
+    Row(
+        children: <Widget>[
+          FloatingActionButton(onPressed: (){},
+            child: Text('7'),
+            backgroundColor: Colors.black54,
+          ),
+          FloatingActionButton(onPressed: (){},
+            child: Text('8'),
+            backgroundColor: Colors.black54,
+          ),
+          FloatingActionButton(onPressed: (){},
+            child: Text('9'),
+            backgroundColor: Colors.black54,
+          ),
+          FloatingActionButton(onPressed: (){},
+              child: Text('×'),
+              backgroundColor: Colors.amber[700]
+          ),
+        ],
+
+      ),
+    //4, 5, 6, Subtract
+    Row(
+      children: <Widget>[
+      FloatingActionButton(onPressed: (){},
+        child: Text('4'),
+        backgroundColor: Colors.black54,
+      ),
+      FloatingActionButton(onPressed: (){},
+        child: Text('5'),
+        backgroundColor: Colors.black54,
+      ),
+      FloatingActionButton(onPressed: (){},
+        child: Text('6'),
+        backgroundColor: Colors.black54,
+      ),
+      FloatingActionButton(onPressed: (){},
+        child: Text('-'),
+        backgroundColor: Colors.red[900]
+      ),
+    ],
+
+    ),
+    //1, 2, 3, Add
+    Row(
+      children: <Widget>[
+      FloatingActionButton(onPressed: (){},
+        child: Text('1'),
+        backgroundColor: Colors.black54,
+      ),
+      FloatingActionButton(onPressed: (){},
+        child: Text('2'),
+        backgroundColor: Colors.black54,
+      ),
+      FloatingActionButton(onPressed: (){},
+        child: Text('3'),
+        backgroundColor: Colors.black54,
+      ),
+      FloatingActionButton(onPressed: (){},
+        child: Text('+'),
+        backgroundColor: Colors.green[900],
+      ),
+    ],
+
+    ),
+    //Sign +/-, 0, decimal point, Equal
+    Row(
+        children: <Widget>[
+        FloatingActionButton(onPressed: (){},
+          child: Text('+x/-x'),
+          backgroundColor: Colors.black54,
+        ),
+        FloatingActionButton(onPressed: (){},
+         child: Text('0'),
+         backgroundColor: Colors.black54,
+        ),
+        FloatingActionButton(onPressed: (){},
+          child: Text('.'),
+         backgroundColor: Colors.black54,
+        ),
+        FloatingActionButton(onPressed: (){},
+          child: Text('='),
+          backgroundColor: Colors.cyan[900],
+        ),
+    ],
+
+    ),
+    ],
+
+    ),
+
+
     );
   }
 }
+
