@@ -45,7 +45,7 @@ class _UnitWidgetState extends State<UnitWidget> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      
+
       backgroundColor: Colors.black54,
       appBar: AppBar(
         title: Text("Unit Converter"),
