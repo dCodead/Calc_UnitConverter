@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   /*Here on main I need a stateful widget with a
@@ -12,11 +13,30 @@ void main() {
 }
 
 //Unit Converter widget
-class UnitWidget extends StatelessWidget{
+class UnitWidget extends StatefulWidget {
   const UnitWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context){
+  State<UnitWidget> createState() => _UnitWidgetState();
+}
+
+class _UnitWidgetState extends State<UnitWidget> {
+  List<DropdownMenuItem<String>> menuItems = [
+    DropdownMenuItem(child: Text("Inch"),value: "Inch"),
+    DropdownMenuItem(child: Text("Mile"),value: "Mile"),
+    DropdownMenuItem(child: Text("Feet"),value: "Feet"),
+    DropdownMenuItem(child: Text("cm"),value: "cm"),
+    DropdownMenuItem(child: Text("m"),value: "m"),
+    DropdownMenuItem(child: Text("m2(squared)"),value: "m2(squared)"),
+    DropdownMenuItem(child: Text("m3(cubed)"),value: "m3(cubed"),
+  ];
+  String selectedValue= "Inch";
+  String selectedValue2= "m";
+
+  double num1=0;
+  double num2=0;
+
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Unit Converter"),
@@ -29,39 +49,68 @@ class UnitWidget extends StatelessWidget{
 
             //Drop-down menus for unit-selection
             Row(
-              // children: [
-              //   DropdownButton(items: [
-              //     DropdownMenuItem(child: Text("Inch")),
-              //     DropdownMenuItem(child: Text("Mile")),
-              //     DropdownMenuItem(child: Text("Feet")),
-              //     DropdownMenuItem(child: Text("cm")),
-              //     DropdownMenuItem(child: Text("m")),
-              //     DropdownMenuItem(child: Text("m2(squared)")),
-              //     DropdownMenuItem(child: Text("m3(cubed)")),
-              //     DropdownMenuItem(child: Text("Inch")),
-              //     DropdownMenuItem(child: Text("Inch")),
-              //     DropdownMenuItem(child: Text("Inch")),
-              //     DropdownMenuItem(child: Text("Inch")),
-              //
-              //   ], onChanged:(){},),
-              // ],
-            ),
+              children: [
+
+        DropdownButton<String>(
+          items: menuItems,
+          value: selectedValue,
+          onChanged: (value) {
+            setState(() {
+              selectedValue = value!;
+            });
+          },
+        ),
+        DropdownButton<String>(
+          items: menuItems,
+          value: selectedValue2,
+          onChanged: (value) {
+            setState(() {
+              selectedValue2 = value!;
+            });
+          },
+        )
+
+          ], // End of Children list
+        ),
 
             //TextFields for input
             Row(
-
+              children: [
+                Container(
+                  width: 150,
+                  child: TextField(textDirection: TextDirection.ltr,decoration: const InputDecoration(labelText: "Enter number"),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,6}'))],onChanged: (value) {
+                    setState((){
+                      num1 = value as double;
+                    });
+                    },),
+                ),
+                Container(
+                  width: 150,
+                  child: TextField(textDirection: TextDirection.ltr,decoration: const InputDecoration(labelText: "Enter number"),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,6}')),],onChanged: (value) {
+                    setState((){
+                      num2 = value as double;
+                    });
+                  },)),
+              ],
 
             ),
             //Calculate Button
             ElevatedButton(onPressed: (){},
-                child: Text("Calculate"),
+              child: Text("Calculate"),
             ),
           ],
         ),
       ),
-    );
-  }
+    );  }
 }
+
+
+
+
 
 //Calculator widget
 class CalcWidget extends StatelessWidget {
